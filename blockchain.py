@@ -1,9 +1,15 @@
+# blockchain.py
+# Blockchain class definition / implementation.
+# Robin Jayaswal, Kyle Dotterrer
+# Dartmouth CS98
+# Winter 2018
+
 import json
 import hashlib
-from urllib.parse import urlparse
 import requests
 
 from time import time
+from urllib.parse import urlparse
 
 
 class Blockchain(object):
@@ -16,9 +22,20 @@ class Blockchain(object):
         self.new_block(previous_hash=1, proof=100)
 
 
-    # create a new block and add it the chain
-    def new_block(self, proof, previous_hash=None):
+    @property
+    def last_block(self):
+        return self.chain[-1]
 
+
+    """
+    Create a new block and add it the chain.
+    Arguments
+        proof (int): the proof of work attached to this block
+        previous_hash (string): the hash of the previous block
+    Return
+        (dictionary) the newly mined block
+    """
+    def new_block(self, proof, previous_hash=None):
         block = {
             'index'         : len(self.chain) + 1,
             'timestamp'     : time(),
@@ -27,6 +44,9 @@ class Blockchain(object):
             'previous_hash' : previous_hash or self.hash(self.chain[-1]),
         }
 
+        # all current transactions are added to the most recently mined block,
+        # therefore, the list of current (pending) transactions that have not
+        # yet been attached to a block is reset
         self.current_transactions = []
 
         self.chain.append(block)
@@ -36,7 +56,6 @@ class Blockchain(object):
     # add a new transaction to the list of existing transactions
     # these transactions have yet to be mined into a block
     def new_transaction(self, sender, recipient, amount):
-
         self.current_transactions.append({
             'sender'    : sender,
             'recipient' : recipient,
@@ -50,19 +69,17 @@ class Blockchain(object):
 
 
     def proof_of_work(self, prev_proof):
-
         proof = 0
         while not self.valid_proof(prev_proof, proof):
             proof += 1
 
         return proof
 
+
     def register_node(self, address):
         parsed_url = urlparse(address)
         self.nodes.add(parsed_url.netloc)
 
-    def valid_chain(self, chain):
-        last_block = chain[0]
 
     def valid_chain(self, chain):
         last_block = chain[0]
@@ -79,6 +96,7 @@ class Blockchain(object):
             current_index += 1
 
         return True
+
 
     def resolve_conflicts(self):
         neighbours = self.nodes
@@ -102,6 +120,7 @@ class Blockchain(object):
 
         return False
 
+
     @staticmethod
     def valid_proof(prev_proof, proof):
         guess = f'{prev_proof}{proof}'.encode()
@@ -115,15 +134,5 @@ class Blockchain(object):
         return hashlib.sha256(block_string).hexdigest()
 
 
-    @property
-    def last_block(self):
-        return self.chain[-1]
-
 if __name__ == '__main__':
-    x = 5
-    y = 0
-
-    while hashlib.sha256(f'{x*y}'.encode()).hexdigest()[-1] != '0':
-        y+=1
-
-    print(y)
+    print('Hello, Blockchain!')
