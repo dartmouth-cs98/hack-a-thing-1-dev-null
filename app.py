@@ -4,6 +4,9 @@
 # Dartmouth CS98
 # Winter, 2018
 
+# Blockchain API implementation adapted from tutorial by Daniel van Flymen
+# https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
+
 import json
 
 from uuid import uuid4
