@@ -53,8 +53,18 @@ class Blockchain(object):
         return block
 
 
-    # add a new transaction to the list of existing transactions
-    # these transactions have yet to be mined into a block
+    """
+    Add a new transaction to the list of existing transactions -
+    these transactions have yet to be mined into a block.
+
+    Arguments
+        sender (string): identifer for the transaction sender
+        recipient (string): identifer for the transaction recipient
+        amount (int): value of the transaction
+    Return
+        (int): the index of the block that this transaction will be added to
+    """
+
     def new_transaction(self, sender, recipient, amount):
         self.current_transactions.append({
             'sender'    : sender,
@@ -68,6 +78,13 @@ class Blockchain(object):
         return self.last_block['index'] + 1
 
 
+    """
+    Compute a proof of work, conditional on the previous proof.
+    Arguments
+        prev_proof (int): the proof of work for the previous block
+    Return
+        (int): the computed proof of work
+    """
     def proof_of_work(self, prev_proof):
         proof = 0
         while not self.valid_proof(prev_proof, proof):
@@ -76,28 +93,56 @@ class Blockchain(object):
         return proof
 
 
-    def register_node(self, address):
-        parsed_url = urlparse(address)
-        self.nodes.add(parsed_url.netloc)
-
-
+    """
+    Determine if the given chain is valid.
+    Arguments
+        chain (list): the chain under investigation
+    Return
+        (boolean): True if the given chain is valid, False otherwise
+    """
     def valid_chain(self, chain):
-        last_block = chain[0]
+        # begin inspection at the genesis block of the chain
+        prev_block = chain[0]
         current_index = 1
 
         while current_index < len(chain):
             block = chain[current_index]
-            if block['previous_hash'] != self.hash(last_block):
-                return False
-            if not self.valid_proof(last_block['proof'], block['proof']):
+
+            # the hash of the previous block must match the value stored
+            # in the current block
+            if block['previous_hash'] != self.hash(prev_block):
                 return False
 
-            last_block = block
+            # the proof of work for the current block must be valid,
+            # conditional on the proof attached to the previous block
+            if not self.valid_proof(prev_block['proof'], block['proof']):
+                return False
+
+            prev_block = block
             current_index += 1
 
         return True
 
 
+    """
+    Register a new node in the blockchain network.
+    Arguments
+        address (string): the address of the node to add
+    Return
+        None
+    """
+    def register_node(self, address):
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+
+
+    """
+    Ensure the consensus is maintained by this node.
+    Arguments
+        None
+    Return
+        (boolean): True if this node's chain has been replaced, False otherwise
+    """
     def resolve_conflicts(self):
         neighbours = self.nodes
         new_chain = None
@@ -121,6 +166,14 @@ class Blockchain(object):
         return False
 
 
+    """
+    Determine if the given proof of work is valid.
+    Arguments
+        prev_proof (int): the proof of work attached to the previous block
+        proof (int): the candidate proof of work
+    Return
+        (boolean): True if the given candidate proof is valid, False otherwise
+    """
     @staticmethod
     def valid_proof(prev_proof, proof):
         guess = f'{prev_proof}{proof}'.encode()
@@ -128,6 +181,13 @@ class Blockchain(object):
         return guess_hash[:4] == '0000'
 
 
+    """
+    Hash a block.
+    Arguments
+        block (dictionary): the block to hash
+    Return
+        (string): the resulting hex digest string
+    """
     @staticmethod
     def hash(block):
         block_string = json.dumps(block, sort_keys=True).encode()
