@@ -38,7 +38,7 @@ def mine():
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
-    values = request.get_json
+    values = request.get_json()
 
     required = ['sender', 'recipient', 'amount']
     if not all(k in values for k in required):
@@ -50,12 +50,12 @@ def new_transaction():
 
 
 @app.route('/chain', methods=['GET'])
-def new_transaction():
+def chain():
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
     }
     return jsonify(response), 200
 
-if __name__ == 'main':
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
