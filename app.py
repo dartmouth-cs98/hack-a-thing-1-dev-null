@@ -12,10 +12,13 @@ import json
 from uuid import uuid4
 from textwrap import dedent
 from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
 
 from blockchain import Blockchain
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 node_identifier = str(uuid4()).replace('-', '')
 
@@ -26,6 +29,7 @@ blockchain = Blockchain()
 Mine a new block.
 """
 @app.route('/mine', methods=['GET'])
+@cross_origin()
 def mine():
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -55,6 +59,7 @@ def mine():
 Add a new transaction to the blockchain.
 """
 @app.route('/transactions/new', methods=['POST'])
+@cross_origin()
 def new_transaction():
     values = request.get_json()
 
@@ -71,6 +76,7 @@ def new_transaction():
 Get the current state of the entire blockchain.
 """
 @app.route('/chain', methods=['GET'])
+@cross_origin()
 def chain():
     response = {
         'chain': blockchain.chain,
@@ -83,6 +89,7 @@ def chain():
 Register new nodes in the network.
 """
 @app.route('/nodes/register', methods=['POST'])
+@cross_origin()
 def register_nodes():
     values = request.get_json()
 
@@ -104,6 +111,7 @@ def register_nodes():
 Resolve blockchain conflicts by finding consensus.
 """
 @app.route('/nodes/resolve', methods=['GET'])
+@cross_origin()
 def consensus():
     replaced = blockchain.resolve_conflicts()
 
