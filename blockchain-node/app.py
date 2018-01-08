@@ -86,6 +86,19 @@ def chain():
 
 
 """
+List the network nodes known to this node.
+"""
+@app.route('/nodes/list', methods=['GET'])
+@cross_origin()
+def list_nodes():
+    response = {
+        'message': 'Known network nodes',
+        'total_nodes': list(blockchain.nodes),
+    }
+    return jsonify(response), 201
+
+
+"""
 Register new nodes in the network.
 """
 @app.route('/nodes/register', methods=['POST'])
