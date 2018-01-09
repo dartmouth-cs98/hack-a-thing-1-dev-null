@@ -68,7 +68,6 @@ def new_transaction():
     # sender should be public address, recipient and amount signed with private key
     unencrypted = json.loads(values["unencrypted"])
     signature = values["signature"]
-    print(unencrypted)
 
     unencryptedToStr = json.dumps(unencrypted, sort_keys=True)
 
