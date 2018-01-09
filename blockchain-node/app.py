@@ -13,6 +13,8 @@ from uuid import uuid4
 from textwrap import dedent
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
 
 from blockchain import Blockchain
 
@@ -63,11 +65,27 @@ Add a new transaction to the blockchain.
 def new_transaction():
     values = request.get_json()
 
-    required = ['sender', 'recipient', 'amount']
-    if not all(k in values for k in required):
-        return 'Missing values', 400
+    # sender should be public address, recipient and amount signed with private key
+    unencrypted = json.loads(values["unencrypted"])
+    signature = values["signature"]
+    print(unencrypted)
 
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+    unencryptedToStr = json.dumps(unencrypted, sort_keys=True)
+
+    key = RSA.importKey(format_public_key(unencrypted["sender"]))
+    public_key = key.publickey()
+    hash = SHA256.new(unencryptedToStr.encode()).digest()
+
+    signatureValid = public_key.verify(hash, signature)
+    if not signatureValid:
+        return "Invalid Signature", 401
+
+
+    required = ['sender', 'recipient', 'amount']
+    if not all(k in unencrypted for k in required):
+        return 'Missing unencrypted', 400
+
+    index = blockchain.new_transaction(unencrypted['sender'], unencrypted['recipient'], unencrypted['amount'])
     response = {'message': f'Transaction will be added to Block {index}'}
     return jsonify(response), 201
 
@@ -141,6 +159,11 @@ def consensus():
 
     return jsonify(response), 200
 
+def format_public_key(key):
+    if key[:10] == '-----BEGIN':
+        return key
+    else:
+        return '-----BEGIN PUBLIC KEY-----\n' + key + '\n-----END PUBLIC KEY-----'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)
