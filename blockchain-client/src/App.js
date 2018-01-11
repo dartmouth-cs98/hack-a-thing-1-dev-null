@@ -8,6 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import './App.css';
 
 const PREFIX = 'http://'
+const LIVE_NODE = 'https://blockchain-node-0.herokuapp.com'
 
 class App extends Component {
   constructor() {
@@ -23,7 +24,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios.get(PREFIX + '127.0.0.1:5000/nodes/list')
+    axios.get(`${LIVE_NODE}/nodes/list`)
       .then((response) => {
         this.setState({
           nodes: response.data.total_nodes
@@ -42,6 +43,7 @@ class App extends Component {
 
   handleChainRefresh() {
     const currentNode = this.state.nodes[this.state.selectedNodeIdx]
+
     if (currentNode) {
       axios.get(PREFIX + currentNode + '/chain')
         .then(response => {
