@@ -14,6 +14,8 @@ import requests
 from time import time
 from urllib.parse import urlparse
 
+# ------------------------------------------------------------------------------
+# CLASS IMPLEMENTATION
 
 class Blockchain(object):
     def __init__(self):
@@ -196,6 +198,8 @@ class Blockchain(object):
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
+# ------------------------------------------------------------------------------
+# SCRIPT
 
 if __name__ == '__main__':
     print('Hello, Blockchain!')

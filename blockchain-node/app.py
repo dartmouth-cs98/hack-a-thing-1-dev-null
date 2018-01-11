@@ -27,6 +27,9 @@ node_identifier = str(uuid4()).replace('-', '')
 # instantiate a new blockchain for this node
 blockchain = Blockchain()
 
+# ------------------------------------------------------------------------------
+# API ROUTES
+
 """
 Mine a new block.
 """
@@ -158,11 +161,17 @@ def consensus():
 
     return jsonify(response), 200
 
+# ------------------------------------------------------------------------------
+# HELPERS
+
 def format_public_key(key):
     if key[:10] == '-----BEGIN':
         return key
     else:
         return '-----BEGIN PUBLIC KEY-----\n' + key + '\n-----END PUBLIC KEY-----'
+
+# ------------------------------------------------------------------------------
+# SCRIPT 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
