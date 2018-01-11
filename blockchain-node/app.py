@@ -171,7 +171,7 @@ def format_public_key(key):
         return '-----BEGIN PUBLIC KEY-----\n' + key + '\n-----END PUBLIC KEY-----'
 
 # ------------------------------------------------------------------------------
-# SCRIPT 
+# SCRIPT
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
