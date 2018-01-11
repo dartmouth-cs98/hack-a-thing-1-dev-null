@@ -1,3 +1,8 @@
+# make_valid_wallet_request.py
+# Robin Jaywaswal, Kyle Dotterrer
+# Dartmouth CS98
+# Winter, 2018
+
 from wallet import send_money
 from generate_wallet import create_wallet
 

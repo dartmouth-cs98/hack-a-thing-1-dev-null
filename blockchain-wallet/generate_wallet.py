@@ -1,3 +1,8 @@
+# generate_wallet.py
+# Robin Jaywaswal, Kyle Dotterrer
+# Dartmouth CS98
+# Winter, 2018
+
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto import Random

@@ -1,3 +1,8 @@
+# wallet.py
+# Robin Jaywaswal, Kyle Dotterrer
+# Dartmouth CS98
+# Winter, 2018
+
 import os
 import json
 import requests
