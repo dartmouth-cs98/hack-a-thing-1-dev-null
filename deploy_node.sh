@@ -1,3 +1,3 @@
- #!/bin/bash  
+#!/bin/bash
 
- git subtree push --prefix blockchain-node heroku master
+git subtree push --prefix blockchain-node heroku master
