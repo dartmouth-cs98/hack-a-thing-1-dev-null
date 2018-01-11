@@ -7,6 +7,7 @@
 # Blockchain API implementation adapted from tutorial by Daniel van Flymen
 # https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
 
+import os
 import json
 
 from uuid import uuid4
@@ -174,4 +175,5 @@ def format_public_key(key):
 # SCRIPT
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    port = os.environ.get('PORT', 5000)
+    app.run(host='0.0.0.0', port=port)
