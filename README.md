@@ -7,8 +7,6 @@ A fun project to explore the wonders of the blockchain.
 
 ### Getting Started
 
-test
-
 ### Running the Code
 
 ### Acknowledgements
