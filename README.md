@@ -88,5 +88,3 @@ Now edit `wallet.py` at the bottom of the file to change the amount and recipien
 ### Acknowledgements
 
 The implementation of the blockchain node is adapted from a tutorial by Daniel van Flymen that can be found [here](https://hackernoon.com/learn-blockchains-by-building-one-117428612f46).
-
-### Additional Information
