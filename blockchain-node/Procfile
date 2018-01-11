@@ -1,1 +1,1 @@
-web: python blockchain-node/app.py
+web: python app.py
